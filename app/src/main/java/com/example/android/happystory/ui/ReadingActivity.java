@@ -35,7 +35,6 @@ public class ReadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reading);
         happyStory = (HappyStory) getIntent().getExtras().getSerializable(STORY_KEY);
-        String text_to_break = getResources().getString(R.string.story_title_one_long_text);
         ButterKnife.bind(this);
         setUpUI();
 
@@ -65,7 +64,6 @@ public class ReadingActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     private void setUpUI(){
         final Toolbar toolbar = findViewById(R.id.toolbar);

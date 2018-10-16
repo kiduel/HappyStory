@@ -11,8 +11,7 @@ public class Utils {
     public static final int CATEGORY_TWO = 2;
     public static final int CATEGORY_THREE = 3;
 
-
-    public static ArrayList<HappyStory> createMockStories(Context context) {
+    public static ArrayList<HappyStory> all_stories(Context context) {
         HappyStory happyStory_one = new HappyStory(R.drawable.one, context.getResources().getString(R.string.story_title_one),
                 context.getResources().getString(R.string.story_title_one_short_des),
                 context.getResources().getString(R.string.story_title_one_long_text),
@@ -38,31 +37,26 @@ public class Utils {
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_ONE);
-        HappyStory happyStory_six = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_six = new HappyStory(R.drawable.six, context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_ONE);
-        HappyStory happyStory_seven = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_seven = new HappyStory(R.drawable.seven, context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
-                Utils.CATEGORY_ONE);
-        HappyStory happyStory_eight = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
+                Utils.CATEGORY_TWO);
+        HappyStory happyStory_eight = new HappyStory(R.drawable.eight, context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
-                Utils.CATEGORY_ONE);
-        HappyStory happyStory_nine = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
+                Utils.CATEGORY_THREE);
+        HappyStory happyStory_nine = new HappyStory(R.drawable.nine, context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
-                Utils.CATEGORY_ONE);
-        HappyStory happyStory_ten = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
-                context.getResources().getString(R.string.story_title_five_short_des),
-                context.getResources().getString(R.string.story_title_five_long_text),
-                context.getResources().getString(R.string.story_title_five_author),
-                Utils.CATEGORY_ONE);
+                Utils.CATEGORY_TWO);
 
         ArrayList<HappyStory> mock_stories = new ArrayList<>();
         mock_stories.add(happyStory_one);
@@ -74,21 +68,45 @@ public class Utils {
         mock_stories.add(happyStory_seven);
         mock_stories.add(happyStory_eight);
         mock_stories.add(happyStory_nine);
-        mock_stories.add(happyStory_ten);
-
 
         return mock_stories;
     }
-    public static ArrayList<HappyStory> createMockStoriesTwo(Context context) {
-        HappyStory happyStory_one = new HappyStory(R.drawable.one, context.getResources().getString(R.string.story_title_one),
-                context.getResources().getString(R.string.story_title_one_short_des),
-                context.getResources().getString(R.string.story_title_one_long_text),
-                context.getResources().getString(R.string.story_title_one_author),
-                Utils.CATEGORY_ONE);
 
 
-        ArrayList<HappyStory> mock_stories = new ArrayList<>();
-        mock_stories.add(happyStory_one);
-        return mock_stories;
+    /*
+    This will categorize the stories for us
+    @Param 1 is the collection of the stories
+    @Param 2 is the category we want
+     */
+    public static ArrayList<HappyStory> categorize_stories(ArrayList stories, int category) {
+
+        ArrayList<HappyStory> category_one = new ArrayList<>();
+        ArrayList<HappyStory> category_two = new ArrayList<>();
+        ArrayList<HappyStory> category_three = new ArrayList<>();
+
+        for (int x = 0; x < stories.size(); x++) {
+            HappyStory happyStory = (HappyStory) stories.get(x);
+            switch (happyStory.getCategory()) {
+                case 1:
+                    category_one.add(happyStory);
+                    break;
+                case 2:
+                    category_two.add(happyStory);
+                    break;
+                case 3:
+                    category_three.add(happyStory);
+                    break;
+            }
+        }
+
+        switch (category) {
+            case 1:
+                return category_one;
+            case 2:
+                return category_two;
+            case 3:
+                return category_three;
+        }
+        return null;
     }
 }

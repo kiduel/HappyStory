@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.nav_drawer)
     NavigationView navigationView;
 
-    ArrayList<HappyStory> happyStoryList;
     StoriesAdapterRV storiesAdapterRV;
     Context context = this;
 
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         SetUpToolBar();
         SetUpNavBar();
-        DisplayStories(Utils.createMockStories(this));
+        DisplayStories(Utils.all_stories(this));
 
     }
 
@@ -66,22 +65,25 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.home_nav_bar:
-                        DisplayStories(Utils.createMockStories(context));
+                        DisplayStories(Utils.all_stories(context));
                         toolbar.setTitle(R.string.app_name);
                         break;
                     case R.id.favorite_nav_bar:
-                        DisplayStories(Utils.createMockStoriesTwo(context));
+                        DisplayStories(Utils.all_stories(context));
                         toolbar.setTitle(R.string.favorite);
                         break;
                     case R.id.category_one_nav_bar:
+                        DisplayStories(Utils.categorize_stories(Utils.all_stories(context), 1));
                         Toast.makeText(MainActivity.this, "One", Toast.LENGTH_SHORT).show();
                         toolbar.setTitle(R.string.category_one);
                         break;
                     case R.id.category_two_nav_bar:
+                        DisplayStories(Utils.categorize_stories(Utils.all_stories(context), 2));
                         Toast.makeText(MainActivity.this, "Two", Toast.LENGTH_SHORT).show();
                         toolbar.setTitle(R.string.category_two);
                         break;
                     case R.id.category_three_nav_bar:
+                        DisplayStories(Utils.categorize_stories(Utils.all_stories(context), 3));
                         Toast.makeText(MainActivity.this, "Three", Toast.LENGTH_SHORT).show();
                         toolbar.setTitle(R.string.category_three);
                         break;

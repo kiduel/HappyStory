@@ -1,16 +1,27 @@
 package com.example.android.happystory.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.android.happystory.R;
+import com.example.android.happystory.network.GetDataService;
+import com.example.android.happystory.network.RetrofitClientService;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Utils {
     public static final int CATEGORY_ONE = 1;
     public static final int CATEGORY_TWO = 2;
     public static final int CATEGORY_THREE = 3;
+    public static List<Story> data_from_json = new ArrayList<>();
+    static List<Post> hellow;
 
+    //
     public static ArrayList<HappyStory> all_stories(Context context) {
         HappyStory happyStory_one = new HappyStory(R.drawable.one, context.getResources().getString(R.string.story_title_one),
                 context.getResources().getString(R.string.story_title_one_short_des),
@@ -108,5 +119,23 @@ public class Utils {
                 return category_three;
         }
         return null;
+    }
+
+    public static ArrayList<Story> UseRetrofit() {
+
+        GetDataService getHappyStory = RetrofitClientService.getRetrofitInstance().create(GetDataService.class);
+        Call<List<Story>> call = getHappyStory.getAllHappyStories();
+        call.enqueue(new Callback<List<Story>>() {
+            @Override
+            public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
+                data_from_json = response.body();
+                Log.i("TAG", "onCreate: size is " + response.body().size());
+            }
+
+            @Override
+            public void onFailure(Call<List<Story>> call, Throwable t) {
+            }
+        });
+        return new ArrayList<>(data_from_json);
     }
 }

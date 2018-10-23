@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.android.happystory.R;
 import com.example.android.happystory.adapters.StoriesReadingAdapterRV;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
 
 public class ReadingActivity extends AppCompatActivity {
     public static final String STORY_KEY = "story_key";
+    public static final String FAVORITE_KEY = "favorite_key";
     HappyStory happyStory;
     StoriesReadingAdapterRV storiesReadingAdapterRV;
     ArrayList<Integer> num = new ArrayList<>();
@@ -29,11 +31,15 @@ public class ReadingActivity extends AppCompatActivity {
     RecyclerView rv_story;
     @BindView(R.id.fab_star)
     FloatingActionButton fab_star;
+    @BindView(R.id.fab_star_secondary)
+    FloatingActionButton fab_star_secondary;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reading);
+
         happyStory = (HappyStory) getIntent().getExtras().getSerializable(STORY_KEY);
         ButterKnife.bind(this);
         setUpUI();
@@ -42,12 +48,34 @@ public class ReadingActivity extends AppCompatActivity {
         rv_story.setAdapter(storiesReadingAdapterRV);
         rv_story.setLayoutManager(new LinearLayoutManager(this));
 
+
         fab_star.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                insertToFavorite();
+            }
+        });
+        fab_star_secondary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteFromFavorite();
             }
         });
     }
+
+    private void insertToFavorite() {
+            fab_star.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
+            MainActivity.happyStoryViewModel.insert(happyStory);
+            Toast.makeText(this, "Story added to fav", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteFromFavorite() {
+        fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border));
+        MainActivity.happyStoryViewModel.delete(happyStory);
+        Toast.makeText(this, "Story removed from fav", Toast.LENGTH_SHORT).show();
+
+    }
+
 
     private ArrayList<String> breakToParagraph(String long_story) {
         String [] stringArray = long_story.split("endofP");

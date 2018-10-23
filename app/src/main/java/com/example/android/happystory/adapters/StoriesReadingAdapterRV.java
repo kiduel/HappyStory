@@ -21,6 +21,7 @@ public class StoriesReadingAdapterRV extends RecyclerView.Adapter<StoriesReading
         this.paragraphs = paragraphs;
     }
 
+
     @NonNull
     @Override
     public StoriesReadingAdapterRV.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -32,6 +33,7 @@ public class StoriesReadingAdapterRV extends RecyclerView.Adapter<StoriesReading
     public void onBindViewHolder(@NonNull StoriesReadingAdapterRV.ViewHolder viewHolder, int pos) {
         viewHolder.textView.setText((paragraphs.get(pos)));
     }
+
 
     @Override
     public int getItemCount() {

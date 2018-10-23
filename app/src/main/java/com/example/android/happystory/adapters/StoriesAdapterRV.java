@@ -15,28 +15,36 @@ import com.example.android.happystory.data.HappyStory;
 import com.example.android.happystory.ui.ReadingActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.android.happystory.ui.ReadingActivity.STORY_KEY;
 
 public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.ViewHolder> {
     Context context;
-    List <HappyStory> happyStories;
+    List <HappyStory> happyStories = new ArrayList<>();
 
-    public StoriesAdapterRV(Context context, List<HappyStory> happyStories) {
-        this.context = context;
-        this.happyStories = happyStories;
-    }
+//    public StoriesAdapterRV(Context context, List<HappyStory> happyStories) {
+//        this.context = context;
+//        this.happyStories = happyStories;
+//    }
+//
+//    public StoriesAdapterRV(Context context) {
+//        this.context = context;
+//    }
 
     @NonNull
     @Override
     public StoriesAdapterRV.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.happy_story_list, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.happy_story_list, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull StoriesAdapterRV.ViewHolder viewHolder, int pos) {
+
+
         viewHolder.title.setText(happyStories.get(pos).getTitle());
         viewHolder.short_des.setText(happyStories.get(pos).getShort_des());
 
@@ -44,6 +52,12 @@ public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.View
                 .load(happyStories.get(pos).getImage())
                 .error(R.drawable.no_image)
                 .into(viewHolder.image);
+    }
+
+    public void setHappyStories(List<HappyStory> happyStories, Context context){
+        this.context = context;
+        this.happyStories = happyStories;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -71,7 +85,7 @@ public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.View
             current_happyStory = happyStories.get(getAdapterPosition());
 
             Intent intent = new Intent(context, ReadingActivity.class);
-            intent.putExtra(STORY_KEY, current_happyStory);
+            intent.putExtra(STORY_KEY, (Serializable) current_happyStory);
             context.startActivity(intent);
         }
     }

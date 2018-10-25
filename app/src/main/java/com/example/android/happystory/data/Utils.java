@@ -1,69 +1,66 @@
 package com.example.android.happystory.data;
 
 import android.content.Context;
-import android.util.Log;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.example.android.happystory.R;
-import com.example.android.happystory.network.GetDataService;
-import com.example.android.happystory.network.RetrofitClientService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Utils {
     public static final int CATEGORY_ONE = 1;
     public static final int CATEGORY_TWO = 2;
     public static final int CATEGORY_THREE = 3;
     public static List<Story> data_from_json = new ArrayList<>();
+    public static List<HappyStory> data_from_json_hp = new ArrayList<>();
+
     static List<Post> hellow;
 
     //
     public static ArrayList<HappyStory> all_stories(Context context) {
-        HappyStory happyStory_one = new HappyStory(R.drawable.one, context.getResources().getString(R.string.story_title_one),
+        HappyStory happyStory_one = new HappyStory("http://www.myiconfinder.com/uploads/iconsets/256-256-9ea3f65bc3bb904b14755c83370d90bb.png", context.getResources().getString(R.string.story_title_one),
                 context.getResources().getString(R.string.story_title_one_short_des),
                 context.getResources().getString(R.string.story_title_one_long_text),
                 context.getResources().getString(R.string.story_title_one_author),
                 Utils.CATEGORY_ONE);
-        HappyStory happyStory_two = new HappyStory(R.drawable.two, context.getResources().getString(R.string.story_title_two),
+        HappyStory happyStory_two = new HappyStory("https://images.freeimages.com/images/premium/small-comps/3703/37034356-cartoon-number-two.jpg", context.getResources().getString(R.string.story_title_two),
                 context.getResources().getString(R.string.story_title_two_short_des),
                 context.getResources().getString(R.string.story_title_two_long_text),
                 context.getResources().getString(R.string.story_title_two_author),
                 Utils.CATEGORY_THREE);
-        HappyStory happyStory_three = new HappyStory(R.drawable.three, context.getResources().getString(R.string.story_title_three),
+        HappyStory happyStory_three = new HappyStory("https://cdn2.iconfinder.com/data/icons/video-games-10/32/number_three_top_earn-128.png", context.getResources().getString(R.string.story_title_three),
                 context.getResources().getString(R.string.story_title_three_short_des),
                 context.getResources().getString(R.string.story_title_three_long_text),
                 context.getResources().getString(R.string.story_title_three_author),
                 Utils.CATEGORY_TWO);
-        HappyStory happyStory_four = new HappyStory(R.drawable.four, context.getResources().getString(R.string.story_title_four),
+        HappyStory happyStory_four = new HappyStory("http://iconbug.com/data/83/256/d226a6bda108dcd82122ea450d3e8cd9.png", context.getResources().getString(R.string.story_title_four),
                 context.getResources().getString(R.string.story_title_four_short_des),
                 context.getResources().getString(R.string.story_title_four_long_text),
                 context.getResources().getString(R.string.story_title_four_author),
                 Utils.CATEGORY_THREE);
-        HappyStory happyStory_five = new HappyStory(R.drawable.five, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_five = new HappyStory("https://www.stonybrook.edu/commcms/japan/links/images/five.png", context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_ONE);
-        HappyStory happyStory_six = new HappyStory(R.drawable.six, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_six = new HappyStory("http://demo.microcad.ca/web/talisman/wp-content/themes/talisman/images/process-icon/6.png", context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_ONE);
-        HappyStory happyStory_seven = new HappyStory(R.drawable.seven, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_seven = new HappyStory("https://is4-ssl.mzstatic.com/image/thumb/Purple49/v4/52/88/49/52884933-d912-df61-22cc-a675881e647e/source/256x256bb.jpg", context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_TWO);
-        HappyStory happyStory_eight = new HappyStory(R.drawable.eight, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_eight = new HappyStory("https://ubisafe.org/images/eyghen-clipart-black-and-white-6.png", context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
                 Utils.CATEGORY_THREE);
-        HappyStory happyStory_nine = new HappyStory(R.drawable.nine, context.getResources().getString(R.string.story_title_five),
+        HappyStory happyStory_nine = new HappyStory("http://getdrawings.com/images/nine-drawing-38.png", context.getResources().getString(R.string.story_title_five),
                 context.getResources().getString(R.string.story_title_five_short_des),
                 context.getResources().getString(R.string.story_title_five_long_text),
                 context.getResources().getString(R.string.story_title_five_author),
@@ -121,21 +118,15 @@ public class Utils {
         return null;
     }
 
-    public static ArrayList<Story> UseRetrofit() {
 
-        GetDataService getHappyStory = RetrofitClientService.getRetrofitInstance().create(GetDataService.class);
-        Call<List<Story>> call = getHappyStory.getAllHappyStories();
-        call.enqueue(new Callback<List<Story>>() {
-            @Override
-            public void onResponse(Call<List<Story>> call, Response<List<Story>> response) {
-                data_from_json = response.body();
-                Log.i("TAG", "onCreate: size is " + response.body().size());
-            }
+    //To check the connection,
 
-            @Override
-            public void onFailure(Call<List<Story>> call, Throwable t) {
-            }
-        });
-        return new ArrayList<>(data_from_json);
+    public static Boolean isConnected(Context context){
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
+
 }

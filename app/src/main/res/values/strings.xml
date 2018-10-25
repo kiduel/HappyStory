@@ -78,5 +78,9 @@ Phasellus a scelerisque augue, nec gravida massa. Integer orci elit, rhoncus in 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="delete_all_stories">Delete All Stories</string>
+    <string name="no_con">No connetion, but you can still read your fav</string>
+    <string name="no_fav_text">There is no favorite stories, add one and come back!</string>
+    <string name="share_place_holder">Will be implemted once the app is in the Play store</string>
+    <string name="quotes">Quotes</string>
 
 </resources>

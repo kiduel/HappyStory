@@ -10,6 +10,7 @@ public class HappyStoryRepository {
     private HappyStoryDao happyStoryDao;
     private LiveData<List<HappyStory>> favoriteStories;
 
+
     HappyStoryRepository(Application application) {
         HappyStoryRoomDatabase db = HappyStoryRoomDatabase.getDatabase(application);
         this.happyStoryDao = db.happyStoryDao();
@@ -72,4 +73,5 @@ public class HappyStoryRepository {
             return null;
         }
     }
+
 }

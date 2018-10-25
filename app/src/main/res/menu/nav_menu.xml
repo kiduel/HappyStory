@@ -17,6 +17,12 @@
             android:icon="@drawable/ic_favorite"
             />
         <item
+            android:id="@+id/quoutes_nav_bar"
+            android:checkable="true"
+            android:title="@string/quotes"
+            android:icon="@drawable/ic_format_quote"
+            />
+        <item
             android:id="@+id/category_one_nav_bar"
             android:checkable="true"
             android:icon="@drawable/ic_book"

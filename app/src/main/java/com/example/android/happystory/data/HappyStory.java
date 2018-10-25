@@ -19,11 +19,11 @@ public class HappyStory implements Serializable, Parcelable {
     private String author;
     @NonNull
     private int category;
-    private int image;
+    private String image;
 //    @PrimaryKey(autoGenerate = true)
     private int id;
 
-    public HappyStory(int id, int image, String title, String short_des, String long_story, String author, int category) {
+    public HappyStory(int id, String image, String title, String short_des, String long_story, String author, int category) {
         this.image = image;
         this.title = title;
         this.short_des = short_des;
@@ -34,7 +34,7 @@ public class HappyStory implements Serializable, Parcelable {
     }
 
     @Ignore
-    public HappyStory(int image, String title, String short_des, String long_story, String author, int category) {
+    public HappyStory(String image, String title, String short_des, String long_story, String author, int category) {
         this.title = title;
         this.short_des = short_des;
         this.long_story = long_story;
@@ -50,7 +50,7 @@ public class HappyStory implements Serializable, Parcelable {
         long_story = in.readString();
         author = in.readString();
         category = in.readInt();
-        image = in.readInt();
+        image = in.readString();
         id = in.readInt();
     }
 
@@ -66,7 +66,7 @@ public class HappyStory implements Serializable, Parcelable {
         }
     };
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -106,7 +106,7 @@ public class HappyStory implements Serializable, Parcelable {
         parcel.writeString(long_story);
         parcel.writeString(author);
         parcel.writeInt(category);
-        parcel.writeInt(image);
+        parcel.writeString(image);
         parcel.writeInt(id);
     }
 }

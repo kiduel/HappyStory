@@ -29,6 +29,7 @@
             android:theme="@style/AppTheme_noActionBar">
 
         </activity>
+        <service android:name=".network.DownloadQuoteIntent"></service>
     </application>
 
 </manifest>

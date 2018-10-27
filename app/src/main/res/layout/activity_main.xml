@@ -36,6 +36,11 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/happy_story_list" />
 
+        <ImageView
+            android:id="@+id/a_quote"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
         <TextView
             android:id="@+id/no_connection"
             android:text="@string/no_con"

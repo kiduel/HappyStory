@@ -82,5 +82,6 @@ Phasellus a scelerisque augue, nec gravida massa. Integer orci elit, rhoncus in 
     <string name="no_fav_text">There is no favorite stories, add one and come back!</string>
     <string name="share_place_holder">Will be implemted once the app is in the Play store</string>
     <string name="quotes">Quotes</string>
+    <string name="qoute_img">https://i.pinimg.com/736x/20/e9/0e/20e90e0e55536ea057f5cf685dd8921f--teambuilding-zig-ziglar.jpg</string>
 
 </resources>

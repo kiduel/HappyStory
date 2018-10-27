@@ -4,7 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +35,8 @@ import com.example.android.happystory.data.HappyStory;
 import com.example.android.happystory.data.HappyStoryListViewModel;
 import com.example.android.happystory.data.HappyStoryViewModel;
 import com.example.android.happystory.data.Utils;
+import com.example.android.happystory.network.DownloadQuoteIntent;
+import com.example.android.happystory.network.SampleResultReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +44,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.android.happystory.network.DownloadQuoteIntent.ACTION_FETCH_IMG;
+import static com.example.android.happystory.network.DownloadQuoteIntent.EXTRA_RECEIVER;
+import static com.example.android.happystory.network.DownloadQuoteIntent.EXTRA_URL;
+
 public class MainActivity extends AppCompatActivity {
     public static final String KEY_FOR_SAVED_PREF = "key_for_saved_pref";
     public static final String KEY_FOR_TITLE = "key_for_title";
     public static final String KEY_FOR_FAV_BOOL = "key_for_boolean";
+    public static final String KEY_FOR_QUOTES_BOOL = "key_for_boolean_quotes";
+    private static final String KEY_FOR_QUOTE_IMG = "key_for_quote_image";
     public static HappyStoryViewModel happyStoryViewModel;
     public LiveData<List<HappyStory>> happyStoryLiveData;
     @BindView(R.id.rv_stories)
@@ -55,17 +68,21 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @BindView(R.id.nav_drawer)
     NavigationView navigationView;
+    @BindView(R.id.a_quote)
+    ImageView quote_img_view;
     @BindView(R.id.fav_is_empty)
     TextView empty_fav;
     StoriesAdapterRV storiesAdapterRV;
     Context context = this;
+    Bitmap quote_image;
+
 
     ArrayList<HappyStory> retrofit_data = new ArrayList<>();
     ArrayList<HappyStory> fav_stories = new ArrayList<>();
     ArrayList<HappyStory> stories_displayed = new ArrayList<>();
     ArrayList<HappyStory> stories_passed = new ArrayList<>();
-    String menu;
-    boolean is_fav_selected;
+    SampleResultReceiver resultReceiver;
+    boolean is_fav_selected, is_quotes_selected;
     int size;
 
     @Override
@@ -74,16 +91,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         storiesAdapterRV = new StoriesAdapterRV();
+        resultReceiver = new SampleResultReceiver(this, new Handler(Looper.getMainLooper()));
         SetUpToolBar();
 
-        if ( !Utils.isConnected(context) ) {
+        /*
+        If there is no internet connection, just show the favorites.
+         */
+        if ( !Utils.isConnected(context) )
+        {
             SetUpNavBar(null);
             hideRVShowNoConnection();
 
-            //If fav is selected, we display the favoriate section, even if the app is offline
+            //If fav is selected, we display the favorite section, even if the app is offline
             if ( savedInstanceState != null ) {
                 is_fav_selected = savedInstanceState.getBoolean(KEY_FOR_FAV_BOOL);
                 setTitle(savedInstanceState.getString(KEY_FOR_TITLE));
+
                 Log.i("TAG", "onCreate: onSaved  " + is_fav_selected);
 
                 if ( !is_fav_selected ) {
@@ -97,54 +120,74 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        /*
+        If there is connection
+        */
+        else {
+            if (savedInstanceState != null ) {
+                is_quotes_selected = savedInstanceState.getBoolean(KEY_FOR_QUOTES_BOOL);
+                if ( is_quotes_selected ) {
+                    setTitle(R.string.quotes);
+                    displayQuote();
 
-        HappyStoryListViewModel happyStoryListViewModel = ViewModelProviders.of(this).get(HappyStoryListViewModel.class);
-        happyStoryListViewModel.getHappyStories().observe(this, new Observer<List<HappyStory>>() {
-            @Override
-            public void onChanged(@Nullable List<HappyStory> happyStories) {
-                Log.i("TAG", "onChanged: from listLive is running");
-                stories_displayed = new ArrayList<>(happyStories);
-                SetUpNavBar(stories_displayed);
-                stories_passed = stories_displayed;
-
-                if ( savedInstanceState == null ) {
-                    Log.i("TAG", "onChanged: from listLive is running");
-                    DisplayStories(stories_displayed);
-                } else {
-                    setTitle(savedInstanceState.getString(KEY_FOR_TITLE));
-                    ArrayList<HappyStory> to_be_dis = savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF);
-                    Log.i("TAG", "onCreate: to_be_dis " + to_be_dis);
-                    DisplayStories(to_be_dis);
-                    stories_passed = to_be_dis;
+                    Bitmap bitmap = savedInstanceState.getParcelable(KEY_FOR_QUOTE_IMG);
+                    quote_img_view.setImageBitmap(bitmap);
                 }
-
             }
-        });
 
-        happyStoryViewModel = ViewModelProviders.of(this).get(HappyStoryViewModel.class);
-        happyStoryLiveData = happyStoryViewModel.getFavoriteStories();
+            HappyStoryListViewModel happyStoryListViewModel = ViewModelProviders.of(this).get(HappyStoryListViewModel.class);
+            happyStoryListViewModel.getHappyStories().observe(this, new Observer<List<HappyStory>>() {
+                @Override
+                public void onChanged(@Nullable List<HappyStory> happyStories) {
+                    {
+                        stories_displayed = new ArrayList<>(happyStories);
+                        SetUpNavBar(stories_displayed);
+                        /*
+                        If quote is not selected, show the list
+                         */
+                        if ( !is_quotes_selected ) {
+                            Log.i("TAG", "onChanged: from listLive is running");
+                            stories_passed = stories_displayed;
 
-        happyStoryLiveData.observe(this,
-                new Observer<List<HappyStory>>() {
-                    @Override
-                    public void onChanged(@Nullable List<HappyStory> stories) {
-                        size = stories.size();
-                        fav_stories = (ArrayList<HappyStory>) stories;
-
-                        Log.i("TAG size", "onChanged: " + size +
-                                "boolean " + is_fav_selected);
-
-                        if ( is_fav_selected ) {
-                            setTitle(getResources().getString(R.string.favorite));
-                            DisplayStories(stories);
-                            if (stories.size() == 0) {
-                                favEmpty();
+                            if ( savedInstanceState == null ) {
+                                Log.i("TAG", "onChanged: from listLive is running");
+                                DisplayStories(stories_displayed);
+                            } else {
+                                setTitle(savedInstanceState.getString(KEY_FOR_TITLE));
+                                ArrayList<HappyStory> to_be_dis = savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF);
+                                Log.i("TAG", "onCreate: to_be_dis " + to_be_dis);
+                                DisplayStories(to_be_dis);
+                                stories_passed = to_be_dis;
                             }
                         }
                     }
-                });
-        Log.i("TAG", "onCreate: CB from OC " + retrofit_data.size());
+                }
+            });
 
+            happyStoryViewModel = ViewModelProviders.of(this).get(HappyStoryViewModel.class);
+            happyStoryLiveData = happyStoryViewModel.getFavoriteStories();
+
+            happyStoryLiveData.observe(this,
+                    new Observer<List<HappyStory>>() {
+                        @Override
+                        public void onChanged(@Nullable List<HappyStory> stories) {
+                            size = stories.size();
+                            fav_stories = (ArrayList<HappyStory>) stories;
+
+                            Log.i("TAG size", "onChanged: " + size +
+                                    "boolean " + is_fav_selected);
+
+                            if ( is_fav_selected ) {
+                                setTitle(getResources().getString(R.string.favorite));
+                                DisplayStories(stories);
+                                if ( stories.size() == 0 ) {
+                                    favEmpty();
+                                }
+                            }
+                        }
+                    });
+            Log.i("TAG", "onCreate: CB from OC " + retrofit_data.size());
+        }
     }
 
     private void SetUpToolBar() {
@@ -176,48 +219,73 @@ public class MainActivity extends AppCompatActivity {
                             setTitle(R.string.app_name);
                             hideRVShowNoConnection();
                     }
-                } else switch (menuItem.getItemId()) {
-                    case R.id.home_nav_bar:
-                        setTitle(R.string.app_name);
-                        is_fav_selected = false;
-                        stories_passed = happyStories;
-                        DisplayStories(stories_passed);
-                        break;
-                    case R.id.favorite_nav_bar:
-                        is_fav_selected = true;
-                        setTitle(R.string.favorite);
-                        if ( size > 0 ) {
-                            rv_stories.setVisibility(View.VISIBLE);
-                            empty_fav.setVisibility(View.GONE);
-                            stories_passed = fav_stories;
+                } else
+                    switch (menuItem.getItemId()) {
+                        case R.id.home_nav_bar:
+                            setTitle(R.string.app_name);
+                            is_fav_selected = false;
+                            is_quotes_selected = false;
+                            stories_passed = happyStories;
                             DisplayStories(stories_passed);
-                        } else {
-                            favEmpty();
-                        }
-                        break;
+                            break;
+                        case R.id.quotes_nav_bar:
+                            setTitle(R.string.quotes);
+                            displayQuote();
+                            is_quotes_selected = true;
+                            break;
+                        case R.id.favorite_nav_bar:
+                            is_fav_selected = true;
+                            is_quotes_selected = false;
+                            setTitle(R.string.favorite);
+                            quote_img_view.setVisibility(View.GONE);
+                            if ( size > 0 ) {
+                                rv_stories.setVisibility(View.VISIBLE);
+                                empty_fav.setVisibility(View.GONE);
+                                stories_passed = fav_stories;
+                                DisplayStories(stories_passed);
+                            } else {
+                                favEmpty();
+                            }
+                            break;
 
-                    case R.id.category_one_nav_bar:
-                        setTitle(R.string.category_one);
-                        DisplayFromNav(happyStories, 1);
-                        break;
-                    case R.id.category_two_nav_bar:
-                        setTitle(R.string.category_two);
-                        DisplayFromNav(happyStories, 2);
-                        break;
-                    case R.id.category_three_nav_bar:
-                        setTitle(R.string.category_three);
-                        DisplayFromNav(happyStories, 3);
-                        break;
-                    case R.id.nav_share:
-                        is_fav_selected = false;
-                        happyStoryViewModel.deleteAll();
-                        Toast.makeText(context, getString(R.string.share_place_holder), Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                        case R.id.category_one_nav_bar:
+                            setTitle(R.string.category_one);
+                            DisplayFromNav(happyStories, 1);
+                            break;
+                        case R.id.category_two_nav_bar:
+                            setTitle(R.string.category_two);
+                            DisplayFromNav(happyStories, 2);
+                            break;
+                        case R.id.category_three_nav_bar:
+                            setTitle(R.string.category_three);
+                            DisplayFromNav(happyStories, 3);
+                            break;
+                        case R.id.nav_share:
+                            is_fav_selected = false;
+                            happyStoryViewModel.deleteAll();
+                            Toast.makeText(context, getString(R.string.share_place_holder), Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
+    }
+
+    private void displayQuote() {
+        is_fav_selected = false;
+        is_quotes_selected = true;
+        rv_stories.setVisibility(View.GONE);
+        empty_fav.setVisibility(View.GONE);
+        no_connection.setVisibility(View.GONE);
+
+        quote_img_view.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, DownloadQuoteIntent.class);
+        intent.setAction(ACTION_FETCH_IMG);
+        intent.putExtra(EXTRA_RECEIVER, resultReceiver);
+        intent.putExtra(EXTRA_URL, getResources().getString(R.string.qoute_img));
+        startService(intent);
     }
 
     private void DisplayFav() {
@@ -262,10 +330,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_FOR_QUOTES_BOOL, is_quotes_selected);
         outState.putBoolean(KEY_FOR_FAV_BOOL, is_fav_selected);
         outState.putString(KEY_FOR_TITLE, toolbar.getTitle().toString());
         outState.putParcelableArrayList(KEY_FOR_SAVED_PREF, stories_passed);
         Log.i("TAG", "onSaveInstanceState: " + stories_passed.size());
+        outState.putParcelable(KEY_FOR_QUOTE_IMG, quote_image);
         super.onSaveInstanceState(outState);
     }
 
@@ -285,9 +355,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu, menu);
-
         return true;
 
     }
 
+
+    public void onImageDownloaded(Bitmap bmp) {
+        quote_image = bmp;
+        quote_img_view.setImageBitmap(quote_image);
+    }
 }
+
+

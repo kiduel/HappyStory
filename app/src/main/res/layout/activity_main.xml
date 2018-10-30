@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/nav_draw_layout"
     android:fitsSystemWindows="true"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.MainActivity"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -56,10 +56,12 @@
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
+        app:itemTextColor="#EEE"
         android:id="@+id/nav_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@drawable/gradient"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         >

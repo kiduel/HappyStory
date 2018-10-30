@@ -24,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,10 +79,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap quote_image;
 
 
-    ArrayList<HappyStory> retrofit_data = new ArrayList<>();
-    ArrayList<HappyStory> fav_stories = new ArrayList<>();
+    public static ArrayList<HappyStory> fav_stories = new ArrayList<>();
     ArrayList<HappyStory> stories_displayed = new ArrayList<>();
-    ArrayList<HappyStory> stories_passed = new ArrayList<>();
     SampleResultReceiver resultReceiver;
     boolean is_fav_selected, is_quotes_selected;
     int size;
@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 is_fav_selected = savedInstanceState.getBoolean(KEY_FOR_FAV_BOOL);
                 setTitle(savedInstanceState.getString(KEY_FOR_TITLE));
 
-                Log.i("TAG", "onCreate: onSaved  " + is_fav_selected);
-
                 if ( !is_fav_selected ) {
                     hideRVShowNoConnection();
                 } else {
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     no_connection.setVisibility(View.GONE);
                     empty_fav.setVisibility(View.GONE);
                     DisplayStories(savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF));
-                    stories_passed = savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF);
+                    stories_displayed = savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF);
                 }
             }
         }
@@ -147,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                          */
                         if ( !is_quotes_selected ) {
                             Log.i("TAG", "onChanged: from listLive is running");
-                            stories_passed = stories_displayed;
 
                             if ( savedInstanceState == null ) {
                                 Log.i("TAG", "onChanged: from listLive is running");
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                                 ArrayList<HappyStory> to_be_dis = savedInstanceState.<HappyStory>getParcelableArrayList(KEY_FOR_SAVED_PREF);
                                 Log.i("TAG", "onCreate: to_be_dis " + to_be_dis);
                                 DisplayStories(to_be_dis);
-                                stories_passed = to_be_dis;
+                                stories_displayed = to_be_dis;
                             }
                         }
                     }
@@ -174,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
                             size = stories.size();
                             fav_stories = (ArrayList<HappyStory>) stories;
 
-                            Log.i("TAG size", "onChanged: " + size +
-                                    "boolean " + is_fav_selected);
-
                             if ( is_fav_selected ) {
                                 setTitle(getResources().getString(R.string.favorite));
                                 DisplayStories(stories);
@@ -186,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-            Log.i("TAG", "onCreate: CB from OC " + retrofit_data.size());
         }
     }
 
@@ -199,16 +192,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SetUpNavBar(final ArrayList<HappyStory> happyStories) {
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if ( happyStories == null ) {
+                    // If the there is no internet
                     switch (menuItem.getItemId()) {
                         case R.id.favorite_nav_bar:
-                            DisplayFav();
                             setTitle(R.string.favorite);
                             if ( size > 0 ) {
-                                stories_passed = fav_stories;
+                                stories_displayed = fav_stories;
                                 DisplayStories(fav_stories);
                             } else {
                                 favEmpty();
@@ -225,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
                             setTitle(R.string.app_name);
                             is_fav_selected = false;
                             is_quotes_selected = false;
-                            stories_passed = happyStories;
-                            DisplayStories(stories_passed);
+                            stories_displayed = happyStories;
+                            DisplayStories(stories_displayed);
                             break;
                         case R.id.quotes_nav_bar:
                             setTitle(R.string.quotes);
@@ -241,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
                             if ( size > 0 ) {
                                 rv_stories.setVisibility(View.VISIBLE);
                                 empty_fav.setVisibility(View.GONE);
-                                stories_passed = fav_stories;
-                                DisplayStories(stories_passed);
+                                stories_displayed = fav_stories;
+                                DisplayStories(stories_displayed);
                             } else {
                                 favEmpty();
                             }
@@ -250,15 +244,15 @@ public class MainActivity extends AppCompatActivity {
 
                         case R.id.category_one_nav_bar:
                             setTitle(R.string.category_one);
-                            DisplayFromNav(happyStories, 1);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_ONE);
                             break;
                         case R.id.category_two_nav_bar:
                             setTitle(R.string.category_two);
-                            DisplayFromNav(happyStories, 2);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_TWO);
                             break;
                         case R.id.category_three_nav_bar:
                             setTitle(R.string.category_three);
-                            DisplayFromNav(happyStories, 3);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_THREE);
                             break;
                         case R.id.nav_share:
                             is_fav_selected = false;
@@ -284,22 +278,23 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DownloadQuoteIntent.class);
         intent.setAction(ACTION_FETCH_IMG);
         intent.putExtra(EXTRA_RECEIVER, resultReceiver);
-        intent.putExtra(EXTRA_URL, getResources().getString(R.string.qoute_img));
+        intent.putExtra(EXTRA_URL, getResources().getString(R.string.quote_img));
         startService(intent);
-    }
-
-    private void DisplayFav() {
     }
 
     private void DisplayFromNav(ArrayList<HappyStory> story_from_nav, int category) {
         is_fav_selected = false;
-        stories_passed = Utils.categorize_stories(story_from_nav, category);
-        DisplayStories(stories_passed);
+        stories_displayed = Utils.categorize_stories(story_from_nav, category);
+        DisplayStories(stories_displayed);
     }
 
     private void DisplayStories(List<HappyStory> stories) {
         storiesAdapterRV.setHappyStories(stories, context);
-        rv_stories.setLayoutManager(new LinearLayoutManager(this));
+        int resId = R.anim.layout_animation_fall_down;
+        int fade_in = R.anim.fade_in_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(context, resId);
+        rv_stories.setLayoutAnimation(animation);
+        rv_stories.setLayoutManager(new LinearLayoutManager(context));
         rv_stories.setVisibility(View.VISIBLE);
         rv_stories.setHasFixedSize(true);
         rv_stories.setAdapter(storiesAdapterRV);
@@ -333,8 +328,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean(KEY_FOR_QUOTES_BOOL, is_quotes_selected);
         outState.putBoolean(KEY_FOR_FAV_BOOL, is_fav_selected);
         outState.putString(KEY_FOR_TITLE, toolbar.getTitle().toString());
-        outState.putParcelableArrayList(KEY_FOR_SAVED_PREF, stories_passed);
-        Log.i("TAG", "onSaveInstanceState: " + stories_passed.size());
+        outState.putParcelableArrayList(KEY_FOR_SAVED_PREF, stories_displayed);
         outState.putParcelable(KEY_FOR_QUOTE_IMG, quote_image);
         super.onSaveInstanceState(outState);
     }

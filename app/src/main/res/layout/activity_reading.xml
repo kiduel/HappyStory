@@ -24,8 +24,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="74dp"
+            app:expandedTitleMarginStart="20dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -61,26 +61,13 @@
     </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_star"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/appbar"
-        android:layout_marginEnd="10dp"
-        app:maxImageSize="30dp"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_favorite_border"
-        android:clickable="true"
-        android:focusable="true"
-        />
-
-    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_star_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/appbar"
         android:layout_marginStart="10dp"
         app:maxImageSize="30dp"
-        app:layout_anchorGravity="bottom|left|end"
+        app:layout_anchorGravity="bottom|center"
         android:src="@drawable/ic_favorite_border"
         android:clickable="true"
         android:focusable="true"

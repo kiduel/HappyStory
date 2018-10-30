@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/general"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/home_nav_bar"
             android:checkable="true"
             android:checked="true"
-            android:icon="@drawable/ic_home"
+            android:icon="@drawable/home"
             android:title="@string/home"
-            />
+          />
         <item
             android:id="@+id/favorite_nav_bar"
             android:checkable="true"
-            android:title="@string/favorite"
             android:icon="@drawable/ic_favorite"
-            />
+            android:title="@string/favorite"
+          />
         <item
             android:id="@+id/quotes_nav_bar"
             android:checkable="true"
-            android:title="@string/quotes"
-            android:icon="@drawable/ic_format_quote"
-            />
+            android:icon="@drawable/ic_quotation"
+            android:title="@string/quotes" />
+    </group>
+
+    <group android:id="@+id/catagory_group">
+
         <item
             android:id="@+id/category_one_nav_bar"
             android:checkable="true"
-            android:icon="@drawable/ic_book"
-            android:title="@string/category_one"
-            />
+            android:icon="@drawable/spiritual"
+            android:title="@string/category_one" />
         <item
             android:id="@+id/category_two_nav_bar"
             android:checkable="true"
-            android:icon="@drawable/ic_book"
-            android:title="@string/category_two"
-            />
+            android:icon="@drawable/ic_couple"
+            android:title="@string/category_two" />
         <item
             android:id="@+id/category_three_nav_bar"
             android:checkable="true"
-            android:icon="@drawable/ic_book"
-            android:title="@string/category_three"
-            />
+            android:icon="@drawable/health"
+            android:title="@string/category_three" />
+        <item
+            android:id="@+id/category_four_nav_bar"
+            android:checkable="true"
+            android:icon="@drawable/natural"
+            android:title="@string/category_four" />
     </group>
-    <item android:title="@string/action"
-        >
-        <menu>
-            <item android:title="@string/share_application"
-                android:icon="@drawable/ic_share"
-                android:id="@+id/nav_share"/>
-        </menu>
-    </item>
+    <group>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share"
+            android:title="@string/share_application" />
+    </group>
 </menu>

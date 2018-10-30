@@ -10,6 +10,6 @@
         style="@style/readable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/story_title_three_short_des"
+        tools:text="@string/paragraph_placeholder"
         android:layout_marginBottom="12dp"/>
 </LinearLayout>

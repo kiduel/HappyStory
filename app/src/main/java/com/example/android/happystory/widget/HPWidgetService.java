@@ -61,8 +61,9 @@ public class HPWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-           // hPWidgetArrayList = MainActivity.fav_stories;
+            hPWidgetArrayList = MainActivity.fav_stories;
             Log.i("TAG", "onDataSetChanged: " + hPWidgetArrayList.size());
+            Log.i("TAG", "onDataSetChanged_tw: " + MainActivity.fav_stories.size());
 
         }
 

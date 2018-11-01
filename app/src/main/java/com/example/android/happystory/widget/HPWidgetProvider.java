@@ -39,6 +39,7 @@ public class HPWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         /*
         We loop to update all the instance
+
          */
         for (int appWidgetId : appWidgetIds ){
             Intent open_main_intent = new Intent(context, MainActivity.class);
@@ -61,10 +62,11 @@ public class HPWidgetProvider extends AppWidgetProvider {
             views.setEmptyView(R.id.list_widget, R.id.empty_widget);
             views.setPendingIntentTemplate(R.id.list_widget, clickPending);
 
-
             ComponentName component=new ComponentName(context,HPWidgetProvider.class);
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list_widget);
             appWidgetManager.updateAppWidget(component, views);
+            Log.i("TAG", "WidonUpdate: notifyAppWidgetViewDataChanged ");
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.list_widget);
+
 
 //            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.list_widget); // R.id.lessons - it's your listview id
 //            appWidgetManager.updateAppWidget(appWidgetId, views);

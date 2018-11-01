@@ -16,8 +16,10 @@
         tools:ignore="GoogleAppIndexingWarning">
 
 
-        <activity android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme_noActionBar">
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/AppTheme_noActionBar"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,13 +27,28 @@
         </activity>
 
 
-        <activity android:name=".ui.ReadingActivity"
+        <activity
+            android:name=".ui.ReadingActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme_noActionBar">
 
         </activity>
-        <service android:name=".network.DownloadQuoteIntent"
-            android:exported="false">
-        </service>
+
+        <service
+            android:name=".network.DownloadQuoteIntent"
+            android:exported="false"></service>
+
+        <service android:name=".widget.HPWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <receiver android:name=".widget.HPWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/example_appwidget_info" />
+        </receiver>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.android.happystory.R;
 import com.example.android.happystory.adapters.StoriesReadingAdapterRV;
 import com.example.android.happystory.data.HappyStory;
+import com.example.android.happystory.widget.HPWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class ReadingActivity extends AppCompatActivity {
     public static final String STORY_KEY = "story_key";
-    public static final String FAVORITE_KEY = "favorite_key";
+
     HappyStory happyStory;
     StoriesReadingAdapterRV storiesReadingAdapterRV;
     @BindView(R.id.rv_happy_stories_read)
@@ -42,7 +43,21 @@ public class ReadingActivity extends AppCompatActivity {
         fav_stories = MainActivity.fav_stories;
         happyStory = (HappyStory) getIntent().getExtras().getSerializable(STORY_KEY);
         ButterKnife.bind(this);
+
+        if (happyStory == null) {
+            String title = getIntent().getStringExtra(HPWidgetProvider.EXTRA_TITLE);
+            String short_des = getIntent().getStringExtra(HPWidgetProvider.EXTRA_SHORT_DES);
+            String long_story = getIntent().getStringExtra(HPWidgetProvider.EXTRA_LONG_TEXT);
+            String author = getIntent().getStringExtra(HPWidgetProvider.EXTRA_AUTHOR);
+            String image = getIntent().getStringExtra(HPWidgetProvider.EXTRA_IMG);
+            int category = getIntent().getIntExtra(HPWidgetProvider.EXTRA_CATEGORY, -1);
+
+            happyStory = new HappyStory(image, title, short_des, long_story, author, category);
+            //fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
+
+        }
         setUpUI();
+
 
         //maybe create an observer
 
@@ -75,7 +90,6 @@ public class ReadingActivity extends AppCompatActivity {
                     fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
                     insertToFavorite();
                 }
-
                 bool = !bool; // reverse
             }
         });

@@ -23,5 +23,7 @@
     <string name="quotes">Quotes</string>
     <string name="quote_img">https://i.pinimg.com/736x/20/e9/0e/20e90e0e55536ea057f5cf685dd8921f--teambuilding-zig-ziglar.jpg</string>
     <string name="paragraph_placeholder">This is place holder for the Paragraphs</string>
+    <string name="button">Button</string>
+    <string name="empty">The list is empty</string>
 
 </resources>

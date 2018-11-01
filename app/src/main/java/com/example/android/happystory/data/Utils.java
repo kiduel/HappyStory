@@ -7,14 +7,15 @@ import android.net.NetworkInfo;
 import java.util.ArrayList;
 
 public class Utils {
-    public static final int CATEGORY_ONE = 1;
-    public static final int CATEGORY_TWO = 2;
-    public static final int CATEGORY_THREE = 3;
+    public static final int CATEGORY_SPIRITUAL = 1;
+    public static final int CATEGORY_RELATIONSHIP = 2;
+    public static final int CATEGORY_HEALTH = 3;
     public static ArrayList<HappyStory> categorize_stories(ArrayList stories, int category) {
 
         ArrayList<HappyStory> category_one = new ArrayList<>();
         ArrayList<HappyStory> category_two = new ArrayList<>();
         ArrayList<HappyStory> category_three = new ArrayList<>();
+
 
         for (int x = 0; x < stories.size(); x++) {
             HappyStory happyStory = (HappyStory) stories.get(x);

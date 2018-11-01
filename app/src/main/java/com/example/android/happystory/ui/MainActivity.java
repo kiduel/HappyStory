@@ -244,15 +244,15 @@ public class MainActivity extends AppCompatActivity {
 
                         case R.id.category_one_nav_bar:
                             setTitle(R.string.category_one);
-                            DisplayFromNav(happyStories, Utils.CATEGORY_ONE);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_SPIRITUAL);
                             break;
                         case R.id.category_two_nav_bar:
                             setTitle(R.string.category_two);
-                            DisplayFromNav(happyStories, Utils.CATEGORY_TWO);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_RELATIONSHIP);
                             break;
                         case R.id.category_three_nav_bar:
                             setTitle(R.string.category_three);
-                            DisplayFromNav(happyStories, Utils.CATEGORY_THREE);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_HEALTH);
                             break;
                         case R.id.nav_share:
                             is_fav_selected = false;

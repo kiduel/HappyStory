@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {HappyStory.class}, version = 1)
+@Database(entities = {HappyStory.class}, version = 1, exportSchema = false)
 public abstract class HappyStoryRoomDatabase extends RoomDatabase {
     public abstract HappyStoryDao happyStoryDao();
 

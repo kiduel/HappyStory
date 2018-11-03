@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppTheme_noActionBar"
-    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -31,6 +30,7 @@
 
             <ImageView
                 android:id="@+id/pic_image"
+                android:contentDescription="@string/image_of_the_story"
                 android:transitionName="profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

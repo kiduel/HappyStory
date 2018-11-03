@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -69,7 +68,6 @@ public class ReadingActivity extends AppCompatActivity {
 
         if ( fav_stories.size() > 0 ) {
             isStoryFav = (checkIfStoryIsAlreadyInFav(happyStory, fav_stories));
-            Log.i("TAG", "reading_activity: " + isStoryFav);
         } else {
             isStoryFav = false;
         }
@@ -88,12 +86,12 @@ public class ReadingActivity extends AppCompatActivity {
                 if ( bool ) {
                     fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border));
                     deleteFromFavorite();
-                    Snackbar.make(view, "Story removed to favorites", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, R.string.stories_removed, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
                     fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
                     insertToFavorite();
-                    Snackbar.make(view, "Story added to favorites", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, R.string.stories_added, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
                 bool = !bool; // reverse

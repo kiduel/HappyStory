@@ -8,10 +8,8 @@
     <string name="category_two">Relationship</string>
     <string name="category_three">Endurance</string>
     <string name="category_four">Nature</string>
-    <string name="action">Action</string>
     <string name="share_application">Share Application</string>
     <string name="this_is_the_nav_bar">Happy Story</string>
-    <string name="this_is_subtitle_of_nav">Happy Stories that will make you happier</string>
     <string name="content_dis_nav_bar">This is the navigational bar image</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -25,5 +23,10 @@
     <string name="paragraph_placeholder">This is place holder for the Paragraphs</string>
     <string name="button">Click to open App </string>
     <string name="empty">The list is empty</string>
+    <string name="a_quote_to_be_displayed">A quote to be displayed</string>
+    <string name="image_of_the_story">image of the story</string>
+    <string name="item">Item</string>
+    <string name="stories_removed">Story removed to favorites</string>
+    <string name="stories_added">Story added to favorites</string>
 
 </resources>

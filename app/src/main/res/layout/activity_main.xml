@@ -41,6 +41,7 @@
 
             <ImageView
                 android:id="@+id/a_quote"
+                android:contentDescription="@string/a_quote_to_be_displayed"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:visibility="invisible" />
@@ -65,7 +66,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_weight="2"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
                 ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />

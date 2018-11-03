@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "20166128164",
+    "firebase_url": "https://happystory-2f573.firebaseio.com",
+    "project_id": "happystory-2f573",
+    "storage_bucket": "happystory-2f573.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20166128164:android:10c74b9e802a4e41",
+        "android_client_info": {
+          "package_name": "com.example.android.happystory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20166128164-3dqcnit25gsq9vgls5npkdhkop89umfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3EW-cSGXGwD-uVFWNE7BuoGL2JoTimNg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

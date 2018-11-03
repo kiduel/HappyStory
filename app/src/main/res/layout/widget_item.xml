@@ -4,7 +4,7 @@
     android:background="@android:color/white"
     android:layout_height="50dp"
     android:textSize="20sp"
-    android:text="Item"
+    android:text="@string/item"
     android:gravity="center"
     android:textStyle="bold"
     android:id="@+id/widget_item_text">

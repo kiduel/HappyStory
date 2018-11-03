@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/content_dis_for_image_rv"
             android:scaleType="centerCrop"
-            android:src="@drawable/three"
+            android:src="@drawable/gradient"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"

@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService;
 
 import com.example.android.happystory.R;
 import com.example.android.happystory.data.HappyStory;
+import com.example.android.happystory.data.Utils;
 import com.example.android.happystory.ui.MainActivity;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class HPWidgetService extends RemoteViewsService {
     public static final String HappyStoryWidget_KEY = "happy_story";
+
 
     //We need this class to prepare and manipulate the data
 
@@ -37,7 +39,6 @@ public class HPWidgetService extends RemoteViewsService {
     class HPItemFactory implements RemoteViewsFactory {
         private Context context;
         private int appWidgetId;
-        private String [] data = {"There is a farmer", "Who had a dog", "And Bingo was his name, Oh"};
         private ArrayList<HappyStory> hPWidgetArrayList = new ArrayList<>();
 
         public HPItemFactory(Context context, Intent intent) {
@@ -49,19 +50,11 @@ public class HPWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            // This will be triggered when we instantiate
-//            hPWidgetArrayList.add(new HappyStory(null, "title_one", "short_des", "long_des", "me", 3));
-//            hPWidgetArrayList.add(new HappyStory(null, "title_two", "short_des", "long_des", "me", 2));
-//            hPWidgetArrayList.add(new HappyStory(null, "title_three", "short_des", "long_des", "me", 1));
-//            hPWidgetArrayList.add(new HappyStory(null, "title_four", "short_des", "long_des", "me", 1));
-
-            hPWidgetArrayList = MainActivity.fav_stories;
-
         }
 
         @Override
         public void onDataSetChanged() {
-            hPWidgetArrayList = MainActivity.fav_stories;
+            hPWidgetArrayList = Utils.categorize_stories(MainActivity.stories_displayed, 3);
             Log.i("TAG", "onDataSetChanged: " + hPWidgetArrayList.size());
             Log.i("TAG", "onDataSetChanged_tw: " + MainActivity.fav_stories.size());
 

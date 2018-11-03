@@ -10,23 +10,29 @@
     app:cardCornerRadius="0dp">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionName="story"
         android:orientation="horizontal">
 
         <ImageView
+            android:transitionName="profile"
             android:id="@+id/story_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_dis_for_image_rv"
-            android:scaleType="fitStart"
+            android:scaleType="centerCrop"
             android:src="@drawable/three"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"/>
 
         <TextView
             android:id="@+id/story_title"

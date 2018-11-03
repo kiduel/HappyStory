@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.android.happystory"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -51,4 +51,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    //Admob
+    implementation 'com.google.android.gms:play-services-ads:17.0.0'
+
+    //Firebase Analytics
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+
 }
+apply plugin: 'com.google.gms.google-services'

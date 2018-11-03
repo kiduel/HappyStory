@@ -3,6 +3,7 @@ package com.example.android.happystory.ui;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.example.android.happystory.R;
 import com.example.android.happystory.adapters.StoriesReadingAdapterRV;
 import com.example.android.happystory.data.HappyStory;
 import com.example.android.happystory.widget.HPWidgetProvider;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +32,11 @@ public class ReadingActivity extends AppCompatActivity {
     StoriesReadingAdapterRV storiesReadingAdapterRV;
     @BindView(R.id.rv_happy_stories_read)
     RecyclerView rv_story;
+    @BindView(R.id.pic_image)
+    ImageView img_story;
     @BindView(R.id.fab_star_secondary)
     FloatingActionButton fab_star_secondary;
+
     ArrayList<HappyStory> fav_stories = new ArrayList<>();
     Boolean isStoryFav, bool;
 
@@ -44,6 +49,7 @@ public class ReadingActivity extends AppCompatActivity {
         happyStory = (HappyStory) getIntent().getExtras().getSerializable(STORY_KEY);
         ButterKnife.bind(this);
 
+
         if (happyStory == null) {
             String title = getIntent().getStringExtra(HPWidgetProvider.EXTRA_TITLE);
             String short_des = getIntent().getStringExtra(HPWidgetProvider.EXTRA_SHORT_DES);
@@ -53,13 +59,9 @@ public class ReadingActivity extends AppCompatActivity {
             int category = getIntent().getIntExtra(HPWidgetProvider.EXTRA_CATEGORY, -1);
 
             happyStory = new HappyStory(image, title, short_des, long_story, author, category);
-            //fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
-
         }
         setUpUI();
 
-
-        //maybe create an observer
 
         storiesReadingAdapterRV = new StoriesReadingAdapterRV(this, breakToParagraph(happyStory.getLong_story()));
         rv_story.setAdapter(storiesReadingAdapterRV);
@@ -86,9 +88,13 @@ public class ReadingActivity extends AppCompatActivity {
                 if ( bool ) {
                     fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border));
                     deleteFromFavorite();
+                    Snackbar.make(view, "Story removed to favorites", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 } else {
                     fab_star_secondary.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite));
                     insertToFavorite();
+                    Snackbar.make(view, "Story added to favorites", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
                 bool = !bool; // reverse
             }
@@ -99,12 +105,10 @@ public class ReadingActivity extends AppCompatActivity {
 
     private void insertToFavorite() {
         MainActivity.happyStoryViewModel.insert(happyStory);
-        Toast.makeText(this, "Story added to fav", Toast.LENGTH_SHORT).show();
-    }
+         }
 
     private void deleteFromFavorite() {
         MainActivity.happyStoryViewModel.delete(happyStory);
-        Toast.makeText(this, "Story removed from fav", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -118,7 +122,7 @@ public class ReadingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                supportFinishAfterTransition();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -132,6 +136,11 @@ public class ReadingActivity extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_tbr);
         collapsingToolbar.setTitle(happyStory.getTitle());
+
+        Picasso.get()
+                .load(happyStory.getImage())
+                .error(R.drawable.no_image)
+                .into(img_story);
     }
 
     private boolean checkIfStoryIsAlreadyInFav(HappyStory happy_story, ArrayList<HappyStory> fav_stories) {

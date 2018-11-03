@@ -41,7 +41,7 @@
         <item
             android:id="@+id/category_three_nav_bar"
             android:checkable="true"
-            android:icon="@drawable/health"
+            android:icon="@drawable/ic_inspiration"
             android:title="@string/category_three" />
         <item
             android:id="@+id/category_four_nav_bar"

@@ -39,6 +39,9 @@ import com.example.android.happystory.data.HappyStoryViewModel;
 import com.example.android.happystory.data.Utils;
 import com.example.android.happystory.network.DownloadQuoteIntent;
 import com.example.android.happystory.network.SampleResultReceiver;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,13 +77,16 @@ public class MainActivity extends AppCompatActivity {
     ImageView quote_img_view;
     @BindView(R.id.fav_is_empty)
     TextView empty_fav;
+    @BindView(R.id.adView)
+    AdView banner_ad;
     StoriesAdapterRV storiesAdapterRV;
     Context context = this;
     Bitmap quote_image;
+    FirebaseAnalytics firebaseAnalytics;
 
 
     public static ArrayList<HappyStory> fav_stories = new ArrayList<>();
-    ArrayList<HappyStory> stories_displayed = new ArrayList<>();
+    public static ArrayList<HappyStory> stories_displayed = new ArrayList<>();
     SampleResultReceiver resultReceiver;
     boolean is_fav_selected, is_quotes_selected;
     int size;
@@ -93,12 +99,39 @@ public class MainActivity extends AppCompatActivity {
         storiesAdapterRV = new StoriesAdapterRV();
         resultReceiver = new SampleResultReceiver(this, new Handler(Looper.getMainLooper()));
         SetUpToolBar();
+        HappyStoryListViewModel happyStoryListViewModel = ViewModelProviders.of(this).get(HappyStoryListViewModel.class);
+
+        //Firebase Analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        //Admob
+        AdRequest adRequest = new AdRequest.Builder().build();
+        banner_ad.loadAd(adRequest);
+
+        happyStoryViewModel = ViewModelProviders.of(this).get(HappyStoryViewModel.class);
+        happyStoryLiveData = happyStoryViewModel.getFavoriteStories();
+
+        happyStoryLiveData.observe(this,
+                new Observer<List<HappyStory>>() {
+                    @Override
+                    public void onChanged(@Nullable List<HappyStory> stories) {
+                        size = stories.size();
+                        fav_stories = (ArrayList<HappyStory>) stories;
+                        Log.i("TAG", "onChanged: size = " + stories.size());
+                        if ( is_fav_selected ) {
+                            setTitle(getResources().getString(R.string.favorite));
+                            DisplayStories(stories);
+                            if ( stories.size() == 0 ) {
+                                favEmpty();
+                            }
+                        }
+                    }
+                });
 
         /*
         If there is no internet connection, just show the favorites.
          */
-        if ( !Utils.isConnected(context) )
-        {
+        if (!Utils.isConnected(context) ) {
             SetUpNavBar(null);
             hideRVShowNoConnection();
 
@@ -106,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
             if ( savedInstanceState != null ) {
                 is_fav_selected = savedInstanceState.getBoolean(KEY_FOR_FAV_BOOL);
                 setTitle(savedInstanceState.getString(KEY_FOR_TITLE));
-
                 if ( !is_fav_selected ) {
                     hideRVShowNoConnection();
                 } else {
@@ -122,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         If there is connection
         */
         else {
-            if (savedInstanceState != null ) {
+            if ( savedInstanceState != null ) {
                 is_quotes_selected = savedInstanceState.getBoolean(KEY_FOR_QUOTES_BOOL);
                 if ( is_quotes_selected ) {
                     setTitle(R.string.quotes);
@@ -133,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            HappyStoryListViewModel happyStoryListViewModel = ViewModelProviders.of(this).get(HappyStoryListViewModel.class);
             happyStoryListViewModel.getHappyStories().observe(this, new Observer<List<HappyStory>>() {
                 @Override
                 public void onChanged(@Nullable List<HappyStory> happyStories) {
@@ -160,26 +191,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
-            happyStoryViewModel = ViewModelProviders.of(this).get(HappyStoryViewModel.class);
-            happyStoryLiveData = happyStoryViewModel.getFavoriteStories();
-
-            happyStoryLiveData.observe(this,
-                    new Observer<List<HappyStory>>() {
-                        @Override
-                        public void onChanged(@Nullable List<HappyStory> stories) {
-                            size = stories.size();
-                            fav_stories = (ArrayList<HappyStory>) stories;
-
-                            if ( is_fav_selected ) {
-                                setTitle(getResources().getString(R.string.favorite));
-                                DisplayStories(stories);
-                                if ( stories.size() == 0 ) {
-                                    favEmpty();
-                                }
-                            }
-                        }
-                    });
         }
     }
 
@@ -252,7 +263,11 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.category_three_nav_bar:
                             setTitle(R.string.category_three);
-                            DisplayFromNav(happyStories, Utils.CATEGORY_HEALTH);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_ENDURANCE);
+                            break;
+                        case R.id.category_four_nav_bar:
+                            setTitle(R.string.category_four);
+                            DisplayFromNav(happyStories, Utils.CATEGORY_NATURE);
                             break;
                         case R.id.nav_share:
                             is_fav_selected = false;
@@ -289,9 +304,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void DisplayStories(List<HappyStory> stories) {
+        quote_img_view.setVisibility(View.GONE);
+        no_connection.setVisibility(View.GONE);
         storiesAdapterRV.setHappyStories(stories, context);
         int resId = R.anim.layout_animation_fall_down;
-        int fade_in = R.anim.fade_in_animation;
+        empty_fav.setVisibility(View.GONE);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(context, resId);
         rv_stories.setLayoutAnimation(animation);
         rv_stories.setLayoutManager(new LinearLayoutManager(context));

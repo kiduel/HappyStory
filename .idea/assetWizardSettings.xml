@@ -30,8 +30,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="fefffb" />
-                            <entry key="outputName" value="ic_quotation" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/../quotation.svg" />
+                            <entry key="outputName" value="ic_inspiration" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../inspiration.svg" />
                           </map>
                         </option>
                       </PersistentState>

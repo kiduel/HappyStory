@@ -1,8 +1,13 @@
 package com.example.android.happystory.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +29,6 @@ import static com.example.android.happystory.ui.ReadingActivity.STORY_KEY;
 public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.ViewHolder> {
     Context context;
     List <HappyStory> happyStories = new ArrayList<>();
-
-//    public StoriesAdapterRV(Context context, List<HappyStory> happyStories) {
-//        this.context = context;
-//        this.happyStories = happyStories;
-//    }
-//
-//    public StoriesAdapterRV(Context context) {
-//        this.context = context;
-//    }
 
     @NonNull
     @Override
@@ -69,6 +65,7 @@ public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.View
         TextView title;
         TextView short_des;
         ImageView image;
+        View view_for_anim;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,9 +73,11 @@ public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.View
             title = (TextView) itemView.findViewById(R.id.story_title);
             short_des = (TextView) itemView.findViewById(R.id.story_short_dis);
             image = (ImageView) itemView.findViewById(R.id.story_image);
+            view_for_anim = (View) itemView.findViewById(R.id.view);
             itemView.setOnClickListener(this);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onClick(View view) {
             HappyStory current_happyStory;
@@ -86,7 +85,16 @@ public class StoriesAdapterRV extends RecyclerView.Adapter<StoriesAdapterRV.View
 
             Intent intent = new Intent(context, ReadingActivity.class);
             intent.putExtra(STORY_KEY, (Serializable) current_happyStory);
-            context.startActivity(intent);
+
+
+            Pair<View, String> p1 = Pair.create((View)image, "profile");
+            Pair<View, String> p2 = Pair.create((View)view_for_anim, "story");
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation((Activity)context, p1, p2);
+            context.startActivity(intent, options.toBundle());
+
+
+//            context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
         }
     }
 

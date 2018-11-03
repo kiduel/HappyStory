@@ -9,12 +9,16 @@ import java.util.ArrayList;
 public class Utils {
     public static final int CATEGORY_SPIRITUAL = 1;
     public static final int CATEGORY_RELATIONSHIP = 2;
-    public static final int CATEGORY_HEALTH = 3;
+    public static final int CATEGORY_ENDURANCE = 3;
+    public static final int CATEGORY_NATURE = 4;
+
     public static ArrayList<HappyStory> categorize_stories(ArrayList stories, int category) {
 
         ArrayList<HappyStory> category_one = new ArrayList<>();
         ArrayList<HappyStory> category_two = new ArrayList<>();
         ArrayList<HappyStory> category_three = new ArrayList<>();
+        ArrayList<HappyStory> category_four = new ArrayList<>();
+
 
 
         for (int x = 0; x < stories.size(); x++) {
@@ -29,6 +33,8 @@ public class Utils {
                 case 3:
                     category_three.add(happyStory);
                     break;
+                case 4:
+                    category_four.add(happyStory);
             }
         }
 
@@ -39,6 +45,8 @@ public class Utils {
                 return category_two;
             case 3:
                 return category_three;
+            case 4:
+                return category_four;
         }
         return null;
     }

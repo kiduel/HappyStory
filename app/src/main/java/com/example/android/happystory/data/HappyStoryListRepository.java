@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HappyStoryListRepository {
     private static Retrofit retrofit;
-    public static final String BASE_URL = "http://www.json-generator.com/api/json/get/";
+    public static final String BASE_URL = "https://s3.amazonaws.com/";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name">HappyStory</string>
+    <string name="app_name">Happy Story</string>
 
     <string name="content_dis_for_image_rv">This is a small image about the HappyStory</string>
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
     <string name="category_one">Spiritual</string>
     <string name="category_two">Relationship</string>
-    <string name="category_three">Health</string>
+    <string name="category_three">Endurance</string>
     <string name="category_four">Nature</string>
     <string name="action">Action</string>
     <string name="share_application">Share Application</string>
-    <string name="this_is_the_nav_bar">This is the nav bar</string>
-    <string name="this_is_subtitle_of_nav">This is subtitle of nav</string>
+    <string name="this_is_the_nav_bar">Happy Story</string>
+    <string name="this_is_subtitle_of_nav">Happy Stories that will make you happier</string>
     <string name="content_dis_nav_bar">This is the navigational bar image</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -23,7 +23,7 @@
     <string name="quotes">Quotes</string>
     <string name="quote_img">https://i.pinimg.com/736x/20/e9/0e/20e90e0e55536ea057f5cf685dd8921f--teambuilding-zig-ziglar.jpg</string>
     <string name="paragraph_placeholder">This is place holder for the Paragraphs</string>
-    <string name="button">Button</string>
+    <string name="button">Click to open App </string>
     <string name="empty">The list is empty</string>
 
 </resources>

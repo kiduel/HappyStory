@@ -8,7 +8,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface GetDataService {
-    @GET("clmeheZTSa?indent=2")
+    @GET("happy-story/test.json")
     Call<List<HappyStory>> getAllHappyStories();
-
 }

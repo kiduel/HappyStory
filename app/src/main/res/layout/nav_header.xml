@@ -2,17 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="@dimen/nav_bar_height"
-    android:background="@color/colorAccent"
+    android:background="@drawable/smile"
     android:padding="@dimen/margin"
     android:gravity="bottom">
 
 
-    <ImageView
-        android:contentDescription="@string/content_dis_nav_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"
-        />
     <TextView
         android:textSize="20sp"
         android:textStyle="bold"
@@ -20,13 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/this_is_the_nav_bar"/>
-
-    <TextView
-        android:textColor="@android:color/background_light"
-        android:textStyle="normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/this_is_subtitle_of_nav"/>
 
 
 </LinearLayout>

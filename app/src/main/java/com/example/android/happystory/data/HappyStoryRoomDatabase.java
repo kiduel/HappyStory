@@ -23,14 +23,11 @@ public abstract class HappyStoryRoomDatabase extends RoomDatabase {
                         HappyStoryRoomDatabase.class,
                         "happy_story_database").
                          fallbackToDestructiveMigration().
-                    //     addCallback(happyStoryDatabaseCallback).
                          build();
             }
         }
         return INSTANCE;
     }
-
-
 
 }
 

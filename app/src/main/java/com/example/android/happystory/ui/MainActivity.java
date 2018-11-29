@@ -5,10 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -26,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +34,6 @@ import com.example.android.happystory.data.HappyStoryListViewModel;
 import com.example.android.happystory.data.HappyStoryViewModel;
 import com.example.android.happystory.data.Utils;
 import com.example.android.happystory.network.DownloadQuoteIntent;
-import com.example.android.happystory.network.SampleResultReceiver;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -50,15 +45,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.android.happystory.network.DownloadQuoteIntent.ACTION_FETCH_IMG;
-import static com.example.android.happystory.network.DownloadQuoteIntent.EXTRA_RECEIVER;
 import static com.example.android.happystory.network.DownloadQuoteIntent.EXTRA_URL;
 
 public class MainActivity extends AppCompatActivity {
     public static final String KEY_FOR_SAVED_PREF = "key_for_saved_pref";
     public static final String KEY_FOR_TITLE = "key_for_title";
     public static final String KEY_FOR_FAV_BOOL = "key_for_boolean";
-    public static final String KEY_FOR_QUOTES_BOOL = "key_for_boolean_quotes";
-    private static final String KEY_FOR_QUOTE_IMG = "key_for_quote_image";
     public static HappyStoryViewModel happyStoryViewModel;
     public LiveData<List<HappyStory>> happyStoryLiveData;
     @BindView(R.id.rv_stories)
@@ -73,22 +65,18 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @BindView(R.id.nav_drawer)
     NavigationView navigationView;
-    @BindView(R.id.a_quote)
-    ImageView quote_img_view;
     @BindView(R.id.fav_is_empty)
     TextView empty_fav;
     @BindView(R.id.adView)
     AdView banner_ad;
     StoriesAdapterRV storiesAdapterRV;
     Context context = this;
-    Bitmap quote_image;
     FirebaseAnalytics firebaseAnalytics;
 
 
     public static ArrayList<HappyStory> fav_stories = new ArrayList<>();
     public static ArrayList<HappyStory> stories_displayed = new ArrayList<>();
-    SampleResultReceiver resultReceiver;
-    boolean is_fav_selected, is_quotes_selected;
+    boolean is_fav_selected;
     int size;
 
     @Override
@@ -97,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         storiesAdapterRV = new StoriesAdapterRV();
-        resultReceiver = new SampleResultReceiver(this, new Handler(Looper.getMainLooper()));
         SetUpToolBar();
         HappyStoryListViewModel happyStoryListViewModel = ViewModelProviders.of(this).get(HappyStoryListViewModel.class);
 
@@ -155,14 +142,6 @@ public class MainActivity extends AppCompatActivity {
         */
         else {
             if ( savedInstanceState != null ) {
-                is_quotes_selected = savedInstanceState.getBoolean(KEY_FOR_QUOTES_BOOL);
-                if ( is_quotes_selected ) {
-                    setTitle(R.string.quotes);
-                    displayQuote();
-
-                    Bitmap bitmap = savedInstanceState.getParcelable(KEY_FOR_QUOTE_IMG);
-                    quote_img_view.setImageBitmap(bitmap);
-                }
             }
 
             happyStoryListViewModel.getHappyStories().observe(this, new Observer<List<HappyStory>>() {
@@ -174,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                         /*
                         If quote is not selected, show the list
                          */
-                        if ( !is_quotes_selected ) {
                             Log.i("TAG", "onChanged: from listLive is running");
 
                             if ( savedInstanceState == null ) {
@@ -186,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("TAG", "onCreate: to_be_dis " + to_be_dis);
                                 DisplayStories(to_be_dis);
                                 stories_displayed = to_be_dis;
-                            }
                         }
                     }
                 }
@@ -229,20 +206,12 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.home_nav_bar:
                             setTitle(R.string.app_name);
                             is_fav_selected = false;
-                            is_quotes_selected = false;
                             stories_displayed = happyStories;
                             DisplayStories(stories_displayed);
                             break;
-                        case R.id.quotes_nav_bar:
-                            setTitle(R.string.quotes);
-                            displayQuote();
-                            is_quotes_selected = true;
-                            break;
                         case R.id.favorite_nav_bar:
                             is_fav_selected = true;
-                            is_quotes_selected = false;
                             setTitle(R.string.favorite);
-                            quote_img_view.setVisibility(View.GONE);
                             if ( size > 0 ) {
                                 rv_stories.setVisibility(View.VISIBLE);
                                 empty_fav.setVisibility(View.GONE);
@@ -283,16 +252,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayQuote() {
         is_fav_selected = false;
-        is_quotes_selected = true;
         rv_stories.setVisibility(View.GONE);
         empty_fav.setVisibility(View.GONE);
         no_connection.setVisibility(View.GONE);
 
-        quote_img_view.setVisibility(View.VISIBLE);
 
         Intent intent = new Intent(this, DownloadQuoteIntent.class);
         intent.setAction(ACTION_FETCH_IMG);
-        intent.putExtra(EXTRA_RECEIVER, resultReceiver);
         intent.putExtra(EXTRA_URL, getResources().getString(R.string.quote_img));
         startService(intent);
     }
@@ -304,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void DisplayStories(List<HappyStory> stories) {
-        quote_img_view.setVisibility(View.GONE);
         no_connection.setVisibility(View.GONE);
         storiesAdapterRV.setHappyStories(stories, context);
         int resId = R.anim.layout_animation_fall_down;
@@ -342,11 +307,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(KEY_FOR_QUOTES_BOOL, is_quotes_selected);
         outState.putBoolean(KEY_FOR_FAV_BOOL, is_fav_selected);
         outState.putString(KEY_FOR_TITLE, toolbar.getTitle().toString());
         outState.putParcelableArrayList(KEY_FOR_SAVED_PREF, stories_displayed);
-        outState.putParcelable(KEY_FOR_QUOTE_IMG, quote_image);
         super.onSaveInstanceState(outState);
     }
 
@@ -370,11 +333,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void onImageDownloaded(Bitmap bmp) {
-        quote_image = bmp;
-        quote_img_view.setImageBitmap(quote_image);
-    }
 }
 
 

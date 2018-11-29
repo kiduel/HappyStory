@@ -18,11 +18,6 @@
             android:icon="@drawable/ic_favorite"
             android:title="@string/favorite"
           />
-        <item
-            android:id="@+id/quotes_nav_bar"
-            android:checkable="true"
-            android:icon="@drawable/ic_quotation"
-            android:title="@string/quotes" />
     </group>
 
     <group android:id="@+id/catagory_group">

@@ -11,4 +11,4 @@ Develop 🔧
 
 ## Screenshots
 <img src="https://i.imgur.com/UZo6Iae.png" width="250"><img src="https://i.imgur.com/euPJC2h.png" width="250"><img src="https://i.imgur.com/r1JxfMC.png" width="250">
-<img src="https://i.imgur.com/EfCqKWF.png" width="600">
+<img src="https://i.imgur.com/EfCqKWF.png" width="5800">
